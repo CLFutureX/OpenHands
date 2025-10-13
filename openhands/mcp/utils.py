@@ -66,15 +66,16 @@ async def create_mcp_clients(
     shttp_servers: list[MCPSHTTPServerConfig],
     conversation_id: str | None = None,
     stdio_servers: list[MCPStdioServerConfig] | None = None,
+    tool_name: str | None = None
 ) -> list[MCPClient]:
     import sys
 
     # Skip MCP clients on Windows
-    if sys.platform == 'win32':
-        logger.info(
-            'MCP functionality is disabled on Windows, skipping client creation'
-        )
-        return []
+    # if sys.platform == 'win32':
+    #     logger.info(
+    #         'MCP functionality is disabled on Windows, skipping client creation'
+    #     )
+    #     return []
 
     if stdio_servers is None:
         stdio_servers = []
@@ -114,6 +115,8 @@ async def create_mcp_clients(
                     f'Successfully connected to MCP stdio server {server_name} - '
                     f'provides {len(tool_names)} tools: {tool_names}'
                 )
+                if tool_name is not None and tool_name in tool_names:
+                    return [client]
 
                 mcp_clients.append(client)
             except Exception as e:
@@ -143,6 +146,8 @@ async def create_mcp_clients(
                 f'Successfully connected to MCP STTP server {server.url} - '
                 f'provides {len(tool_names)} tools: {tool_names}'
             )
+            if tool_name is not None and tool_name in tool_names:
+                return [client]
 
             # Only add the client to the list after a successful connection
             mcp_clients.append(client)

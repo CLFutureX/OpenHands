@@ -459,9 +459,9 @@ class ActionExecutionClient(Runtime):
         from openhands.events.observation import ErrorObservation
 
         # Check if we're on Windows - MCP is disabled on Windows
-        if sys.platform == 'win32':
-            self.log('info', 'MCP functionality is disabled on Windows')
-            return ErrorObservation('MCP functionality is not available on Windows')
+        # if sys.platform == 'win32':
+        #     self.log('info', 'MCP functionality is disabled on Windows')
+        #     return ErrorObservation('MCP functionality is not available on Windows')
 
         # Import here to avoid circular imports
         from openhands.mcp.utils import call_tool_mcp as call_tool_mcp_handler
@@ -476,7 +476,7 @@ class ActionExecutionClient(Runtime):
 
         # Create clients for this specific operation
         mcp_clients = await create_mcp_clients(
-            updated_mcp_config.sse_servers, updated_mcp_config.shttp_servers, self.sid
+            updated_mcp_config.sse_servers, updated_mcp_config.shttp_servers, self.sid, action.name
         )
 
         # Call the tool and return the result
